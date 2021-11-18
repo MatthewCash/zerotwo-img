@@ -5,6 +5,7 @@ import { Tweet } from './types/Tweet';
 import { translateTextGoogle, translateTextMicrosoft } from './util/translate';
 import { skipHashtags } from './util/hashtags';
 import { findNextTweetIndexFromPrevious, sendTweetToTwitter } from './twitter';
+import { saveLastTweetId } from './database';
 
 export const tweets = importedTweets as Tweet[];
 
@@ -42,7 +43,7 @@ const publishTweet = async (tweet: Tweet) => {
 
     console.log(`Publishing tweet with ${files.length} images`);
 
-    await fs.writeFile('./db/lastTweetId', tweet.id);
+    await saveLastTweetId(tweet.id);
 
     await sendTweetToTwitter(tweet, translatedText, files);
 

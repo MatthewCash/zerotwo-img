@@ -1,7 +1,7 @@
 import Twitter from 'twitter';
 import { Tweet } from './types/Tweet';
-import fs from 'fs/promises';
 import importedTweets from './record.json';
+import { getLastTeetId } from './database';
 
 const tweets = importedTweets as Tweet[];
 
@@ -51,7 +51,7 @@ export const sendTweetToTwitter = async (
 };
 
 export const findNextTweetIndexFromPrevious = async (): Promise<number> => {
-    const lastTweetId = await fs.readFile('./db/lastTweetId', 'utf8');
+    const lastTweetId = await getLastTeetId();
 
     const lastTweetIndex = tweets.findIndex(tweet => tweet.id === lastTweetId);
 

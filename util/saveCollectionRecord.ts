@@ -1,4 +1,4 @@
-import parse from 'csv-parse/lib/sync';
+import { parse } from 'csv-parse/lib/sync';
 import fs from 'fs/promises';
 import { performance } from 'perf_hooks';
 import { Tweet } from '../types/Tweet';

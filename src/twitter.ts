@@ -1,6 +1,6 @@
 import Twitter from 'twitter';
 import { Tweet } from './types/Tweet';
-import importedTweets from './record.json';
+import importedTweets from '../record.json';
 import { getLastTeetId } from './database';
 
 const tweets = importedTweets as Tweet[];

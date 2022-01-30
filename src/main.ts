@@ -1,5 +1,5 @@
 import fs from 'fs/promises';
-import importedTweets from './record.json';
+import importedTweets from '../record.json';
 import schedule from 'node-schedule';
 import { Tweet } from './types/Tweet';
 import { translateTextGoogle, translateTextMicrosoft } from './util/translate';

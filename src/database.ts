@@ -1,16 +1,20 @@
-import redis from 'redis';
+import { createClient } from 'redis';
 
 const redisKeyId = process.env.REDIS_KEY_ID || 'zerotwo_img:last_tweet_id';
 
-const client = redis.createClient();
+const client = createClient();
+
+client.connect();
 
 export const getLastTeetId = async (): Promise<string> => {
-    const lastTweetId = await new Promise<string>(res => {
-        client.get(redisKeyId, (error, value) => res(value));
-    });
+    if (!client.isOpen) await client.connect();
+
+    const lastTweetId = await client.get(redisKeyId);
     return lastTweetId;
 };
 
 export const saveLastTweetId = async (tweetId: string): Promise<void> => {
-    await new Promise(res => client.set(redisKeyId, tweetId.toString(), res));
+    if (!client.isOpen) await client.connect();
+
+    await client.set(redisKeyId, tweetId.toString());
 };

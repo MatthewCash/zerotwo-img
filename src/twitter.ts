@@ -3,6 +3,8 @@ import { Tweet } from './types/Tweet';
 import importedTweets from '../record.json';
 import { getLastTeetId } from './database';
 
+const mediaOwnerId = '322673351';
+
 const tweets = importedTweets as Tweet[];
 
 const twitterClient = new Twitter({
@@ -22,7 +24,8 @@ export const sendTweetToTwitter = async (
             const res = await twitterClient
                 .post('media/upload', {
                     media: file,
-                    media_category: 'tweet_image'
+                    media_category: 'tweet_image',
+                    additional_owners: mediaOwnerId
                 })
                 .catch(error => {
                     console.warn(

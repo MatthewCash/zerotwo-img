@@ -6,22 +6,22 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "ts-node src/main.ts",
-        "dev": "ts-node-dev main.ts"
+        "dev": "ts-node-dev src/main.ts"
     },
     "author": "Matthew_Cash",
     "license": "AGPL-3.0-only",
     "dependencies": {
-        "@types/node": "^16.11.21",
+        "@types/node": "^16.11.26",
         "@types/node-schedule": "^1.3.2",
         "@types/redis": "^4.0.11",
         "@types/twitter": "^1.7.1",
-        "axios": "^0.25.0",
+        "axios": "^0.26.0",
         "csv-parse": "^5.0.4",
         "node-schedule": "^2.1.0",
-        "redis": "^4.0.2",
-        "ts-node": "^10.4.0",
+        "redis": "^4.0.4",
+        "ts-node": "^10.6.0",
         "twitter": "^1.7.1",
-        "typescript": "^4.5.5"
+        "typescript": "^4.6.2"
     },
     "devDependencies": {
         "ts-node-dev": "^1.1.8"

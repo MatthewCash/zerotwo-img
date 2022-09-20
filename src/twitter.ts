@@ -24,13 +24,6 @@ export const sendTweetToTwitter = async (
                     media: file,
                     media_category: 'tweet_image'
                 })
-                .catch(error => {
-                    console.warn(
-                        `An error occured while uploading image ${index} to twitter`
-                    );
-                    console.warn(error);
-                    return null;
-                });
 
             return res?.media_id_string as string;
         })
@@ -43,10 +36,6 @@ export const sendTweetToTwitter = async (
         .post('statuses/update', {
             status: content,
             media_ids: mediaIds.join(',')
-        })
-        .catch(error => {
-            console.error('An error occured while sending tweet to twitter');
-            console.error(error);
         });
 };
 

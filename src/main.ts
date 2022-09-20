@@ -9,22 +9,31 @@ import { saveLastTweetId } from './database';
 
 export const tweets = importedTweets as Tweet[];
 
-export const scheduleNextTweet = async () => {
-    const nextTweetIndex = await findNextTweetIndexFromPrevious();
-    const nextTweet = tweets[nextTweetIndex];
+export const startTweetScheduler = async () => {
+    while (true) {
+        const nextTweetIndex = await findNextTweetIndexFromPrevious();
+        const nextTweet = tweets[nextTweetIndex];
 
-    const tweetDate = new Date(new Date(nextTweet.date).getTime() + 9.461e10);
-
-    if (tweetDate.getTime() < Date.now()) {
-        console.log(
-            `Immediately publishing missed tweet scheduled for ${tweetDate.toLocaleString()}`
+        const tweetDate = new Date(
+            new Date(nextTweet.date).getTime() + 9.461e10
         );
 
-        publishTweet(nextTweet);
-    } else {
-        schedule.scheduleJob(tweetDate, () => publishTweet(nextTweet));
+        if (tweetDate.getTime() < Date.now()) {
+            console.log(
+                `Immediately publishing missed tweet scheduled for ${tweetDate.toLocaleString()}`
+            );
+        } else {
+            console.log(
+                `Next tweet scheduled for ${tweetDate.toLocaleString()}`
+            );
+            await new Promise(r => schedule.scheduleJob(tweetDate, r));
+        }
 
-        console.log(`Next tweet scheduled for ${tweetDate.toLocaleString()}`);
+        console.log(`Publishing tweet id: (${nextTweet.id})`);
+
+        await publishTweet(nextTweet)
+            .then(() => saveLastTweetId(nextTweet.id))
+            .catch(error => console.warn('Tweet failed, will retry!'));
     }
 };
 
@@ -35,7 +44,9 @@ const publishTweet = async (tweet: Tweet) => {
         () => null
     );
 
-    translatedText ||= await translateTextMicrosoft(toTranslate);
+    translatedText ||= await translateTextMicrosoft(toTranslate).catch(
+        () => 'English Translation Unavailable'
+    );
 
     const files = await Promise.all(
         tweet.fileNames.map(name => fs.readFile('./images/collection/' + name))
@@ -43,11 +54,7 @@ const publishTweet = async (tweet: Tweet) => {
 
     console.log(`Publishing tweet with ${files.length} images`);
 
-    await saveLastTweetId(tweet.id);
-
     await sendTweetToTwitter(tweet, translatedText, files);
-
-    scheduleNextTweet();
 };
 
-scheduleNextTweet();
+startTweetScheduler();

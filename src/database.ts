@@ -1,10 +1,11 @@
 import { createClient } from 'redis';
 
+const redisUrl = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
 const redisKeyId = process.env.REDIS_KEY_ID || 'zerotwo_img:last_tweet_id';
 
-const client = createClient();
+const client = createClient({ url: redisUrl });
 
-client.connect();
+export const connectDatabase = () => client.connect();
 
 export const getLastTeetId = async (): Promise<string> => {
     if (!client.isOpen) await client.connect();

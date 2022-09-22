@@ -1,9 +1,7 @@
 import Twitter from 'twitter';
 import { Tweet } from './types/Tweet';
-import importedTweets from '../record.json';
 import { getLastTeetId } from './database';
-
-const tweets = importedTweets as Tweet[];
+import { getTweets } from './tweetRecord';
 
 const twitterClient = new Twitter({
     consumer_key: process.env.TWITTER_CONSUMER_KEY,
@@ -32,17 +30,17 @@ export const sendTweetToTwitter = async (
     const content =
         tweet.content + (translatedText ? '\n\n' + translatedText : '');
 
-    await twitterClient
-        .post('statuses/update', {
-            status: content,
-            media_ids: mediaIds.join(',')
-        });
+    await twitterClient.post('statuses/update', {
+        status: content,
+        media_ids: mediaIds.join(',')
+    });
 };
 
-export const findNextTweetIndexFromPrevious = async (): Promise<number> => {
+export const findNextTweetFromPrevious = async (): Promise<Tweet> => {
     const lastTweetId = await getLastTeetId();
+    const tweets = getTweets();
 
     const lastTweetIndex = tweets.findIndex(tweet => tweet.id === lastTweetId);
 
-    return lastTweetIndex + 1;
+    return tweets[lastTweetIndex + 1];
 };

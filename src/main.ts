@@ -1,18 +1,15 @@
 import fs from 'fs/promises';
-import importedTweets from '../record.json';
 import schedule from 'node-schedule';
 import { Tweet } from './types/Tweet';
 import { translateTextGoogle, translateTextMicrosoft } from './util/translate';
 import { skipHashtags } from './util/hashtags';
-import { findNextTweetIndexFromPrevious, sendTweetToTwitter } from './twitter';
-import { saveLastTweetId } from './database';
-
-export const tweets = importedTweets as Tweet[];
+import { findNextTweetFromPrevious, sendTweetToTwitter } from './twitter';
+import { connectDatabase, saveLastTweetId } from './database';
+import { loadTweets } from './tweetRecord';
 
 export const startTweetScheduler = async () => {
     while (true) {
-        const nextTweetIndex = await findNextTweetIndexFromPrevious();
-        const nextTweet = tweets[nextTweetIndex];
+        const nextTweet = await findNextTweetFromPrevious();
 
         const tweetDate = new Date(
             new Date(nextTweet.date).getTime() + 9.461e10
@@ -57,4 +54,14 @@ const publishTweet = async (tweet: Tweet) => {
     await sendTweetToTwitter(tweet, translatedText, files);
 };
 
-startTweetScheduler();
+const main = async (...args) => {
+    await connectDatabase();
+    console.log('Database connected!');
+
+    await loadTweets();
+    console.log('Loaded tweet record!');
+
+    startTweetScheduler();
+}
+
+main(...process.argv.slice(1));

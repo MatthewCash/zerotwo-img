@@ -17,11 +17,10 @@ export const sendTweetToTwitter = async (
 ) => {
     const mediaIds = await Promise.all(
         files.map(async (file, index) => {
-            const res = await twitterClient
-                .post('media/upload', {
-                    media: file,
-                    media_category: 'tweet_image'
-                })
+            const res = await twitterClient.post('media/upload', {
+                media: file,
+                media_category: 'tweet_image'
+            });
 
             return res?.media_id_string as string;
         })

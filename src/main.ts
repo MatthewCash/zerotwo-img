@@ -53,13 +53,12 @@ const publishTweet = async (tweet: Tweet) => {
 };
 
 const main = async (...args) => {
-    await connectDatabase();
-    console.log('Database connected!');
-
-    await loadTweets();
-    console.log('Loaded tweet record!');
+    await Promise.all([
+        connectDatabase().then(() => console.log('Database connected!')),
+        loadTweets().then(() => console.log('Loaded tweet record!'))
+    ]);
 
     startTweetScheduler();
-}
+};
 
 main(...process.argv.slice(1));

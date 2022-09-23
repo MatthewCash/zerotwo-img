@@ -1,12 +1,15 @@
-import { parse } from 'csv-parse/lib/sync';
+import { parse } from 'csv-parse/sync';
 import fs from 'fs/promises';
 import { performance } from 'perf_hooks';
 import { Tweet } from '../types/Tweet';
 
+const snowflakeToDate = (snowflake: string): Date =>
+    new Date(Number(snowflake) / 2 ** 22 + 1288834974657);
+
 export const saveCollectionRecord = async () => {
     const startTime = performance.now();
 
-    const file = await fs.readFile('../images/collection/record.csv');
+    const file = await fs.readFile('./images/collection/record.csv');
 
     console.log(`Loaded ${file.byteLength} bytes from disk`);
 
@@ -28,7 +31,6 @@ export const saveCollectionRecord = async () => {
         mediaType: data['Media type'] as string,
         mediaUrl: data['Media URL'] as string,
         fileName: data['Saved filename'] as string,
-        date: data['Tweet date'] as string,
         content: data['Tweet content'] as string,
         meta: {
             replies: Number(data.Replies),
@@ -58,8 +60,9 @@ export const saveCollectionRecord = async () => {
                 mediaType: tweet.mediaType,
                 mediaUrls: [tweet.mediaUrl],
                 fileNames: [tweet.fileName],
-                date: tweet.date,
-                content: tweet.content.substr(0, urlIndex),
+                // The date from provided csv, may be in a different timezone, the snowflake is also more precise
+                date: snowflakeToDate(tweetId),
+                content: tweet.content.substring(0, urlIndex),
                 meta: {
                     replies: tweet.meta.replies,
                     retweets: tweet.meta.retweets,
@@ -79,7 +82,7 @@ export const saveCollectionRecord = async () => {
     console.log('Saving JSON');
 
     await fs.writeFile(
-        '../images/collection/record.json',
+        './record.json',
         JSON.stringify(collectionTweets)
     );
 

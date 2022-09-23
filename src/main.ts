@@ -11,9 +11,7 @@ export const startTweetScheduler = async () => {
     while (true) {
         const nextTweet = await findNextTweetFromPrevious();
 
-        const tweetDate = new Date(
-            new Date(nextTweet.date).getTime() + 9.461e10
-        );
+        const tweetDate = new Date(nextTweet.date.getTime() + 9.461e10);
 
         if (tweetDate.getTime() < Date.now()) {
             console.log(

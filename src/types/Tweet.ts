@@ -6,7 +6,7 @@ export interface Tweet {
     mediaType: string;
     mediaUrls: string[];
     fileNames: string[];
-    date: string;
+    date: Date;
     content: string;
     meta: {
         replies: number;

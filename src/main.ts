@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+import path from 'path';
 import schedule from 'node-schedule';
 import { Tweet } from './types/Tweet';
 import { translateTextGoogle, translateTextMicrosoft } from './util/translate';
@@ -44,7 +45,14 @@ const publishTweet = async (tweet: Tweet) => {
     );
 
     const files = await Promise.all(
-        tweet.fileNames.map(name => fs.readFile('./images/collection/' + name))
+        tweet.fileNames.map(name =>
+            fs.readFile(
+                path.join(
+                    process.env.TWEET_COLLECTION_PATH,
+                    name
+                )
+            )
+        )
     );
 
     console.log(`Publishing tweet with ${files.length} images`);

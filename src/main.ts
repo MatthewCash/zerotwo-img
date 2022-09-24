@@ -29,7 +29,12 @@ export const startTweetScheduler = async () => {
 
         await publishTweet(nextTweet)
             .then(() => saveLastTweetId(nextTweet.id))
-            .catch(error => console.warn('Tweet failed, will retry!'));
+            .catch(error =>
+                console.warn(
+                    'An error occurred publishing tweet, will retry: ',
+                    error
+                )
+            );
     }
 };
 

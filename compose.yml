@@ -1,0 +1,25 @@
+version: 3.8
+services:
+    cache:
+        image: docker.io/redis
+        volumes:
+            - cache:/data
+    twitter-bot:
+        image: zerotwo-img:latest
+        build: .
+        depends_on: [ cache ]
+        environment:
+            - REDIS_URL=redis://cache:6379
+            - NODE_ENV=production
+            - TWEET_RECORD_PATH=/data/record.json
+            - TWEET_COLLECTION_PATH=/data/images/collection
+
+            # Passed through from parent
+            - AZURE_TRANSLATE_API_KEY
+            - TWITTER_CONSUMER_KEY
+            - TWITTER_CONSUMER_SECRET
+            - TWITTER_ACCESS_TOKEN_KEY
+            - TWITTER_ACCESS_TOKEN_SECRET
+        volumes:
+            - ./record.json:/data/record.json:ro
+            - ./images:/data/images:ro

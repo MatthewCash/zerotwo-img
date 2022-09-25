@@ -17,11 +17,11 @@ export const startTweetScheduler = async () => {
 
         if (tweetDate.getTime() < Date.now()) {
             console.log(
-                `Immediately publishing missed tweet scheduled for ${tweetDate.toLocaleString()}`
+                `Immediately publishing missed tweet scheduled for ${tweetDate.toUTCString()}`
             );
         } else {
             console.log(
-                `Next tweet scheduled for ${tweetDate.toLocaleString()}`
+                `Next tweet scheduled for ${tweetDate.toUTCString()}`
             );
             await new Promise(r => schedule.scheduleJob(tweetDate, r));
         }

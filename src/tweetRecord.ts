@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+
 import { Tweet } from './types/Tweet';
 
 let tweets: Tweet[];

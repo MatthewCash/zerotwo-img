@@ -1,4 +1,5 @@
 import Twitter from 'twitter';
+
 import { Tweet } from './types/Tweet';
 import { getLastTeetId } from './database';
 import { getTweets } from './tweetRecord';

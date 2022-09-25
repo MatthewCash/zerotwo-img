@@ -1,6 +1,7 @@
-import { parse } from 'csv-parse/sync';
 import fs from 'fs/promises';
+import { parse } from 'csv-parse/sync';
 import { performance } from 'perf_hooks';
+
 import { Tweet } from '../types/Tweet';
 
 const snowflakeToDate = (snowflake: string): Date =>

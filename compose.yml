@@ -3,7 +3,7 @@ services:
     cache:
         image: docker.io/redis
         volumes:
-            - cache:/data
+            - /data
     twitter-bot:
         image: zerotwo-img:latest
         build: .

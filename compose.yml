@@ -5,7 +5,7 @@ services:
         volumes:
             - /data
     twitter-bot:
-        image: zerotwo-img:latest
+        image: twitter-collection-bot:latest
         build: .
         depends_on: [ cache ]
         environment:

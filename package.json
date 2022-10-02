@@ -1,7 +1,7 @@
 {
-    "name": "zerotwo-img",
+    "name": "twitter-collection-bot",
     "version": "1.0.0",
-    "description": "Zero Two Image Collection",
+    "description": "Twitter Image Collection Uploader Bot",
     "main": "src/main.ts",
     "scripts": {
         "start": "ts-node src/main.ts",

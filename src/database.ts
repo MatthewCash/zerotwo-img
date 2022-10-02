@@ -1,7 +1,7 @@
 import { createClient } from 'redis';
 
 const redisUrl = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
-const redisKeyId = process.env.REDIS_KEY_ID || 'zerotwo_img:last_tweet_id';
+const redisKeyId = process.env.REDIS_KEY_ID || 'twitter-collection-bot:last_tweet_id';
 
 const client = createClient({ url: redisUrl });
 

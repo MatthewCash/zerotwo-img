@@ -12,6 +12,7 @@ import { loadTweets } from './tweetRecord';
 export const startTweetScheduler = async () => {
     while (true) {
         const nextTweet = await findNextTweetFromPrevious();
+        if (!nextTweet) return console.error('Could not determine next tweet!');
 
         const tweetDate = new Date(nextTweet.date.getTime() + 9.461e10);
 
@@ -20,9 +21,7 @@ export const startTweetScheduler = async () => {
                 `Immediately publishing missed tweet scheduled for ${tweetDate.toUTCString()}`
             );
         } else {
-            console.log(
-                `Next tweet scheduled for ${tweetDate.toUTCString()}`
-            );
+            console.log(`Next tweet scheduled for ${tweetDate.toUTCString()}`);
             await new Promise(r => schedule.scheduleJob(tweetDate, r));
         }
 
@@ -52,12 +51,7 @@ const publishTweet = async (tweet: Tweet) => {
 
     const files = await Promise.all(
         tweet.fileNames.map(name =>
-            fs.readFile(
-                path.join(
-                    process.env.TWEET_COLLECTION_PATH,
-                    name
-                )
-            )
+            fs.readFile(path.join(process.env.TWEET_COLLECTION_PATH, name))
         )
     );
 
@@ -72,7 +66,8 @@ const main = async (...args) => {
         loadTweets().then(() => console.log('Loaded tweet record!'))
     ]);
 
-    startTweetScheduler();
-};
+    await startTweetScheduler();
+    process.exit(1); // If the scheduler exits, the service has failed
+};;
 
 main(...process.argv.slice(1));

@@ -1,13 +1,22 @@
-version: 3.8
+version: "3.9"
 services:
     cache:
         image: docker.io/redis
         volumes:
-            - /data
+            - cache_data:/data
+        healthcheck:
+            test: "redis-cli ping"
+            start_period: 5s
+            interval: 1s
+            timeout: 1s
     twitter-bot:
         image: twitter-collection-bot:latest
-        build: .
-        depends_on: [ cache ]
+        build:
+            context: .
+            dockerfile: Containerfile
+        depends_on:
+            cache:
+                condition: service_healthy
         environment:
             - REDIS_URL=redis://cache:6379
             - NODE_ENV=production
@@ -23,3 +32,6 @@ services:
         volumes:
             - ./record.json:/data/record.json:ro
             - ./images:/data/images:ro
+volumes:
+    cache_data:
+

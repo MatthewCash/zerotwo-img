@@ -7,7 +7,7 @@ const client = createClient({ url: redisUrl });
 
 export const connectDatabase = () => client.connect();
 
-export const getLastTeetId = async (): Promise<string> => {
+export const getLastTweetId = async (): Promise<string> => {
     if (!client.isOpen) await client.connect();
 
     const lastTweetId = await client.get(redisKeyId);

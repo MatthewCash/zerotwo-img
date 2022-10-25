@@ -1,7 +1,7 @@
 import Twitter from 'twitter';
 
 import { Tweet } from './types/Tweet';
-import { getLastTeetId } from './database';
+import { getLastTweetId } from './database';
 import { getTweets } from './tweetRecord';
 
 const twitterClient = new Twitter({
@@ -17,7 +17,7 @@ export const sendTweetToTwitter = async (
     files: Buffer[]
 ) => {
     const mediaIds = await Promise.all(
-        files.map(async (file, index) => {
+        files.map(async file => {
             const res = await twitterClient.post('media/upload', {
                 media: file,
                 media_category: 'tweet_image'
@@ -37,7 +37,10 @@ export const sendTweetToTwitter = async (
 };
 
 export const findNextTweetFromPrevious = async (): Promise<Tweet> => {
-    const lastTweetId = await getLastTeetId();
+    const lastTweetId = await getLastTweetId();
+
+    if (!lastTweetId) return null;
+
     const tweets = getTweets();
 
     const lastTweetIndex = tweets.findIndex(tweet => tweet.id === lastTweetId);

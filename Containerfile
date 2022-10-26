@@ -9,4 +9,8 @@ COPY src src
 COPY tsconfig.json .
 RUN npx tsc
 
-CMD ["node", "src/main.js"]
+FROM gcr.io/distroless/nodejs:16
+COPY --from=build /app /app
+WORKDIR /app
+
+CMD ["src/main.js"]

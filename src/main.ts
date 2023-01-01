@@ -17,6 +17,7 @@ export const startTweetScheduler = async () => {
         const tweetDate = new Date(nextTweet.date.getTime() + 9.461e10);
 
         if (tweetDate.getTime() < Date.now()) {
+            await new Promise(r => setTimeout(r, 5000)); // Help prevent rate limiting
             console.log(
                 `Immediately publishing missed tweet scheduled for ${tweetDate.toUTCString()}`
             );

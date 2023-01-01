@@ -59,5 +59,8 @@ export const findNextTweetFromPrevious = async (): Promise<Tweet> => {
 
     const lastTweetIndex = tweets.findIndex(tweet => tweet.id === lastTweetId);
 
+    // Repeat at end
+    if (lastTweetIndex === tweets.length - 1) return tweets[0];
+
     return tweets[lastTweetIndex + 1];
 };

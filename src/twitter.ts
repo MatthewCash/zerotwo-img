@@ -27,13 +27,27 @@ export const sendTweetToTwitter = async (
         })
     );
 
-    const content =
-        tweet.content + (translatedText ? '\n\n' + translatedText : '');
+    const fullText = tweet.content + (translatedText ? '\n\n' + translatedText : '');
+    const splitTranslation = fullText.length > 280;
 
-    await twitterClient.post('statuses/update', {
+    const content = splitTranslation ? tweet.content : fullText;
+
+    if (content.length > 280) {
+        console.log({ text: tweet.content, translatedText });
+        throw new Error('Tweet too long!');
+    }
+
+    const newTweet = await twitterClient.post('statuses/update', {
         status: content,
         media_ids: mediaIds.join(',')
     });
+
+    if (splitTranslation) {
+        await twitterClient.post('statuses/update', {
+            status: translatedText,
+            in_reply_to_status_id: newTweet.id_str
+        })
+    }
 };
 
 export const findNextTweetFromPrevious = async (): Promise<Tweet> => {
